@@ -13,11 +13,11 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
-
 /*
  */
-AsymmetricKeyPair rsaGenerateKeyPair({ int size = 512 }) {
-  var keyParams = new RSAKeyGeneratorParameters(BigInt.parse('65537'), size, 12);
+AsymmetricKeyPair rsaGenerateKeyPair({int size = 2048}) {
+  var keyParams =
+      new RSAKeyGeneratorParameters(BigInt.parse('65537'), size, 12);
 
   var secureRandom = new FortunaRandom();
   var random = new Random.secure();
@@ -45,7 +45,24 @@ Uint8List rsaSign(Uint8List inBytes, RSAPrivateKey privateKey) {
   return signature.bytes;
 }
 
+/*
+https://github.com/dart-lang/sdk/issues/32803#issuecomment-387405784
+ */
+Uint8List rsaPublicKeyToBytes(RSAPublicKey publicKey) {
+  BigInt n = publicKey.n;
 
+  int bytes = (n.bitLength + 7) >> 3;
+
+  var b256 = new BigInt.from(256);
+  var result = new Uint8List(bytes);
+
+  for (int i = 0; i < n.bitLength; i++) {
+    result[i] = n.remainder(b256).toInt();
+    n = n >> 8;
+  }
+
+  return result;
+}
 
 /*
  */

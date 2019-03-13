@@ -56,3 +56,18 @@ ASN1Object makeDN(Map d) {
 
   return DN;
 }
+
+/*
+ */
+ASN1Object makeDNSignature(Uint8List signedDN) {
+  var outer = ASN1Sequence();
+
+  var inner = ASN1Sequence();
+  outer.add(inner);
+
+  inner.add(lookupX500ObjectIdentifier("rsaEncryption"));
+  inner.add(ASN1BitString(signedDN));
+  // inner.add(ASN1Null());
+
+  return outer;
+}

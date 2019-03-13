@@ -27,6 +27,7 @@ import "package:pointycastle/export.dart";
 import 'package:asn1lib/asn1lib.dart';
 
 import "./dn.dart";
+import "./ids.dart";
 import "./crypto.dart";
 
 /*
@@ -49,13 +50,7 @@ String generateRSACSR({Map dn}) {
 }
 
 main(List<String> arguments) {
-  String csr = generateRSACSR(dn: {
-    "CN": "www.davidjanes.com",
-    "O": "Consensas",
-    "L": "Toronto",
-    "S": "Ontario",
-    "C": "CA",
-  });
+  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
 
   ASN1Object DN = makeDN({
     "CN": "www.davidjanes.com",
@@ -64,18 +59,29 @@ main(List<String> arguments) {
     "ST": "Ontario",
     "C": "CA",
   });
-  
-  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
 
-  Uint8List signedDN =rsaSign(DN.encodedBytes, keyPair.privateKey);
-
-  ASN1Sequence inner = ASN1Sequence();
-  inner.add(ASN1Integer(BigInt.from(0)));
-  inner.add(DN);
-  inner.add(ASN1BitString(signedDN));
+  ASN1Sequence blockDN = ASN1Sequence();
+  blockDN.add(ASN1Integer(BigInt.from(0)));
+  blockDN.add(DN);
+  blockDN.add(makeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
   // inner.add(ASN1Null());
 
-  print( base64.encode(inner.encodedBytes));
+  ASN1Sequence blockProtocol = ASN1Sequence();
+  blockProtocol.add(lookupX500ObjectIdentifier("md5WithRSAEncryption"));
+
+  RSAPublicKey publicKey = keyPair.publicKey;
+  var publicKeySeq = new ASN1Sequence();
+  publicKeySeq.add(ASN1Integer(publicKey.modulus));
+  publicKeySeq.add(ASN1Integer(publicKey.exponent));
+  var publicKeySeqBitString =
+      new ASN1BitString(Uint8List.fromList(publicKeySeq.encodedBytes));
+
+  ASN1Sequence outer = ASN1Sequence();
+  outer.add(blockDN);
+  outer.add(blockProtocol);
+  outer.add(ASN1BitString(rsaPublicKeyToBytes(publicKey)));
+
+  print(base64.encode(outer.encodedBytes));
 
   // print(signedDN.bytes);
 }
