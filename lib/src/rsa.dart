@@ -1,5 +1,5 @@
 /*
- * lib/src/base.dart
+ * lib/src/rsa.dart
  *
  * David Janes
  * 2018-03-13
@@ -19,10 +19,19 @@
  * limitations under the License.
  */
 
+/*
+ *  lib/x509csr.dart
+ * 
+ *  David Janes
+ *  Consensas
+ *  2019-03-13
+ */
 
-// TODO: Put public facing types in this file.
+import "./dn.dart";
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+/*
+ */
+String generateX509CSR({ Map dn }) {
+  return null;
+
 }

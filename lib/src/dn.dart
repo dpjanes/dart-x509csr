@@ -1,5 +1,5 @@
 /*
- * lib/src/base.dart
+ * lib/src/dn.dart
  *
  * David Janes
  * 2018-03-13
@@ -19,10 +19,36 @@
  * limitations under the License.
  */
 
+import 'package:asn1lib/asn1lib.dart';
+import "./ids.dart";
 
-// TODO: Put public facing types in this file.
+/*
+ *  Encode as ASN1 e.g. 
+  {
+    "CN": "www.davidjanes.com",
+    "O": "Consensas",
+    "L": "Toronto",
+    "S": "Ontario",
+    "C": "CA",
+  }
+ */
 
-/// Checks if you are awesome. Spoiler: you are.
-class Awesome {
-  bool get isAwesome => true;
+ASN1Set makeDN(Map d) {
+  var DN = ASN1Set();
+
+  d.forEach((key, value) {
+    var oid = lookupX500ObjectIdentifier(key);
+    if (oid == null) {
+      print("x509csr.makeDN: ${key} not found");
+      return;
+    }
+
+    var pair = ASN1Sequence();
+    pair.add(oid);
+    pair.add(ASN1OctetString(value));
+
+    DN.add(pair);
+  });
+
+  return DN;
 }
