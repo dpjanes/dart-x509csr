@@ -20,6 +20,8 @@
  */
 
 import 'package:asn1lib/asn1lib.dart';
+import 'dart:typed_data';
+
 import "./ids.dart";
 
 /*
@@ -32,9 +34,8 @@ import "./ids.dart";
     "C": "CA",
   }
  */
-
-ASN1Set makeDN(Map d) {
-  var DN = ASN1Set();
+ASN1Object makeDN(Map d) {
+  var DN = ASN1Sequence();
 
   d.forEach((key, value) {
     var oid = lookupX500ObjectIdentifier(key);
@@ -47,7 +48,10 @@ ASN1Set makeDN(Map d) {
     pair.add(oid);
     pair.add(ASN1OctetString(value));
 
-    DN.add(pair);
+    var pairset = ASN1Set();
+    pairset.add(pair);
+
+    DN.add(pairset);
   });
 
   return DN;
