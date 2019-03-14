@@ -67,7 +67,7 @@ ASN1Object makeDNSignature(Uint8List signedDN) {
 
   inner.add(lookupX500ObjectIdentifier("rsaEncryption"));
   inner.add(ASN1BitString(signedDN));
-  // inner.add(ASN1Null());
+  inner.add(ASN1Null());
 
   return outer;
 }

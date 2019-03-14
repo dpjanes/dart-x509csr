@@ -64,7 +64,6 @@ main(List<String> arguments) {
   blockDN.add(ASN1Integer(BigInt.from(0)));
   blockDN.add(DN);
   blockDN.add(makeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
-  // inner.add(ASN1Null());
 
   ASN1Sequence blockProtocol = ASN1Sequence();
   blockProtocol.add(lookupX500ObjectIdentifier("md5WithRSAEncryption"));
