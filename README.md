@@ -1,17 +1,42 @@
-A library for Dart developers.
+Make X.509 RSA Certificate Signing Requests (CSR).
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+We include helper functions for generating Keypairs
+and outputting associated PEMs.
 
 ## Usage
 
 A simple usage example:
 
 ```dart
-import 'package:dart_x509csr/dart_x509csr.dart';
+/*
+ *  example/x509csr.dart
+ *
+ *  David Janes
+ *  Consensas
+ *  2019-02-24
+ */
+import 'package:x509csr/x509csr.dart';
 
-main() {
-  var awesome = new Awesome();
+import "package:pointycastle/export.dart";
+import 'package:asn1lib/asn1lib.dart';
+
+main(List<String> arguments) {
+  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
+
+  ASN1ObjectIdentifier.registerFrequentNames();
+  Map<String, String> dn = {
+    "CN": "www.davidjanes.com",
+    "O": "Consensas",
+    "L": "Toronto",
+    "ST": "Ontario",
+    "C": "CA",
+  };
+
+  ASN1Object encodedCSR = makeRSACSR(dn, keyPair.privateKey, keyPair.publicKey);
+
+  print(encodeCSRToPem(encodedCSR));
+  print(encodeRSAPublicKeyToPem(keyPair.publicKey));
+  print(encodeRSAPrivateKeyToPem(keyPair.privateKey));
 }
 ```
 
@@ -19,4 +44,4 @@ main() {
 
 Please file feature requests and bugs at the [issue tracker][tracker].
 
-[tracker]: http://example.com/issues/replaceme
+[tracker]: https://github.com/dpjanes/dart-x509csr
