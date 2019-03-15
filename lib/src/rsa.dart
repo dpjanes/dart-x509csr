@@ -133,5 +133,7 @@ main(List<String> arguments) {
 
   ASN1Object encodedCSR = makeRSACSR(dn, keyPair.privateKey, keyPair.publicKey);
 
-  print(base64.encode(encodedCSR.encodedBytes));
+  print(encodeCSRToPem(encodedCSR));
+  print(encodeRSAPublicKeyToPem(keyPair.publicKey));
+  print(encodeRSAPrivateKeyToPem(keyPair.privateKey));
 }
