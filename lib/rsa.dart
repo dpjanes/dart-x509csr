@@ -19,13 +19,10 @@
  * limitations under the License.
  */
 
-import 'dart:convert';
-import 'dart:typed_data';
+import 'package:x509csr/x509csr.dart';
 
 import "package:pointycastle/export.dart";
 import 'package:asn1lib/asn1lib.dart';
-
-import "./crypto.dart";
 
 ASN1Object _encodeDN(Map<String, String> d) {
   var DN = ASN1Sequence();
@@ -115,23 +112,4 @@ ASN1Object makeRSACSR(
   outer.add(blockProtocol);
   outer.add(ASN1BitString(rsaPrivateKeyToBytes(privateKey)));
   return outer;
-}
-
-main(List<String> arguments) {
-  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
-
-  ASN1ObjectIdentifier.registerFrequentNames();
-  Map<String, String> dn = {
-    "CN": "www.davidjanes.com",
-    "O": "Consensas",
-    "L": "Toronto",
-    "ST": "Ontario",
-    "C": "CA",
-  };
-
-  ASN1Object encodedCSR = makeRSACSR(dn, keyPair.privateKey, keyPair.publicKey);
-
-  print(encodeCSRToPem(encodedCSR));
-  print(encodeRSAPublicKeyToPem(keyPair.publicKey));
-  print(encodeRSAPrivateKeyToPem(keyPair.privateKey));
 }

@@ -48,7 +48,7 @@ Uint8List rsaSign(Uint8List inBytes, RSAPrivateKey privateKey) {
 /*
 https://github.com/dart-lang/sdk/issues/32803#issuecomment-387405784
  */
-Uint8List bigIntToBytes(BigInt n) {
+Uint8List _bigIntToBytes(BigInt n) {
   int bytes = (n.bitLength + 7) >> 3;
 
   var b256 = new BigInt.from(256);
@@ -63,13 +63,13 @@ Uint8List bigIntToBytes(BigInt n) {
 }
 
 Uint8List rsaPublicKeyModulusToBytes(RSAPublicKey publicKey) =>
-    bigIntToBytes(publicKey.modulus);
+    _bigIntToBytes(publicKey.modulus);
 Uint8List rsaPublicKeyExponentToBytes(RSAPublicKey publicKey) =>
-    bigIntToBytes(publicKey.exponent);
+    _bigIntToBytes(publicKey.exponent);
 Uint8List rsaPrivateKeyToBytes(RSAPrivateKey privateKey) =>
-    bigIntToBytes(privateKey.modulus);
+    _bigIntToBytes(privateKey.modulus);
 
-List<String> chunked(String encoded, {chunkSize = 64}) {
+List<String> _chunked(String encoded, {chunkSize = 64}) {
   List<String> chunks = [];
 
   for (int i = 0; i < encoded.length; i += chunkSize) {
@@ -81,7 +81,7 @@ List<String> chunked(String encoded, {chunkSize = 64}) {
 }
 
 encodeCSRToPem(ASN1Object csr) {
-  List<String> chunks = chunked(base64.encode(csr.encodedBytes));
+  List<String> chunks = _chunked(base64.encode(csr.encodedBytes));
 
   return "-----BEGIN CERTIFICATE REQUEST-----\r\n" +
       chunks.join("\r\n") +
@@ -107,7 +107,7 @@ encodeRSAPublicKeyToPem(RSAPublicKey publicKey) {
   topLevelSeq.add(algorithmSeq);
   topLevelSeq.add(publicKeySeqBitString);
   var dataBase64 = base64.encode(topLevelSeq.encodedBytes);
-  List<String> chunks = chunked(dataBase64);
+  List<String> chunks = _chunked(dataBase64);
 
   return """-----BEGIN PUBLIC KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PUBLIC KEY-----""";
 }
@@ -153,7 +153,7 @@ encodeRSAPrivateKeyToPem(RSAPrivateKey privateKey) {
   topLevelSeq.add(publicKeySeqOctetString);
   var dataBase64 = base64.encode(topLevelSeq.encodedBytes);
 
-  List<String> chunks = chunked(dataBase64);
+  List<String> chunks = _chunked(dataBase64);
 
   return """-----BEGIN PRIVATE KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PRIVATE KEY-----""";
 }

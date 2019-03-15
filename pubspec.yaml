@@ -1,4 +1,4 @@
-name: dart_x509csr
+name: x509csr
 description: Create X.509 Certificate Signing Requests
 version: 1.0.0
 homepage: https://www.davidjanes.com
