@@ -22,8 +22,6 @@
 import 'package:asn1lib/asn1lib.dart';
 import 'dart:typed_data';
 
-import "./ids.dart";
-
 /*
  *  Encode as ASN1 e.g. 
   {
@@ -34,19 +32,43 @@ import "./ids.dart";
     "C": "CA",
   }
  */
-ASN1Object makeDN(Map d) {
+ASN1Object makeDN(Map<String, String> d) {
   var DN = ASN1Sequence();
 
-  d.forEach((key, value) {
-    var oid = lookupX500ObjectIdentifier(key);
+  d.forEach((name, value) {
+    ASN1ObjectIdentifier oid = ASN1ObjectIdentifier.fromName(name);
     if (oid == null) {
-      print("x509csr.makeDN: ${key} not found");
+      print("x509csr.makeDN: name=${name} not found");
+      return;
+    }
+
+    ASN1Object ovalue;
+
+    switch (name.toUpperCase()) {
+      case "C":
+        {
+          ovalue = ASN1PrintableString(value);
+        }
+        break;
+      case "CN":
+      case "O":
+      case "L":
+      case "S":
+      default:
+        {
+          ovalue = ASN1UTF8String(value);
+        }
+        break;
+    }
+
+    if (ovalue == null) {
+      print("x509csr.makeDN: value=${value} not processed");
       return;
     }
 
     var pair = ASN1Sequence();
     pair.add(oid);
-    pair.add(ASN1OctetString(value));
+    pair.add(ovalue);
 
     var pairset = ASN1Set();
     pairset.add(pair);
@@ -65,7 +87,7 @@ ASN1Object makeDNSignature(Uint8List signedDN) {
   var inner = ASN1Sequence();
   outer.add(inner);
 
-  inner.add(lookupX500ObjectIdentifier("rsaEncryption"));
+  inner.add(ASN1ObjectIdentifier.fromName("rsaEncryption"));
   inner.add(ASN1BitString(signedDN));
   inner.add(ASN1Null());
 

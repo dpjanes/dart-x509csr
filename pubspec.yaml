@@ -8,7 +8,9 @@ environment:
   sdk: '>=2.1.0 <3.0.0'
 
 dependencies:
-  asn1lib: ^0.5.4
+  ## asn1lib: ^0.5.5
+  asn1lib: 
+    path: /Users/david/consensas/asn1lib
   pointycastle: 1.0.1
 
 dev_dependencies:

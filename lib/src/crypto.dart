@@ -51,12 +51,14 @@ https://github.com/dart-lang/sdk/issues/32803#issuecomment-387405784
 Uint8List rsaPublicKeyToBytes(RSAPublicKey publicKey) {
   BigInt n = publicKey.n;
 
+/*
   print("E ${publicKey.exponent}");
   print("");
   print("E ${publicKey.modulus}");
   print("");
   print("E ${publicKey.n}");
   print("");
+  */
 
   int bytes = (n.bitLength + 7) >> 3;
 

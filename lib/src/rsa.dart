@@ -27,7 +27,6 @@ import "package:pointycastle/export.dart";
 import 'package:asn1lib/asn1lib.dart';
 
 import "./dn.dart";
-import "./ids.dart";
 import "./crypto.dart";
 
 /*
@@ -50,7 +49,9 @@ String generateRSACSR({Map dn}) {
 }
 
 main(List<String> arguments) {
+
   AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
+  ASN1ObjectIdentifier.registerFrequentNames();
 
   ASN1Object DN = makeDN({
     "CN": "www.davidjanes.com",
@@ -66,7 +67,7 @@ main(List<String> arguments) {
   blockDN.add(makeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
 
   ASN1Sequence blockProtocol = ASN1Sequence();
-  blockProtocol.add(lookupX500ObjectIdentifier("md5WithRSAEncryption"));
+  blockProtocol.add(ASN1ObjectIdentifier.fromName("md5WithRSAEncryption"));
 
   RSAPublicKey publicKey = keyPair.publicKey;
   var publicKeySeq = new ASN1Sequence();
