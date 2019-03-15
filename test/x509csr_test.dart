@@ -2,7 +2,6 @@
  *  example/crypto.dart
  *
  *  David Janes
- *  Consensas
  *  2019-03-15
  */
 

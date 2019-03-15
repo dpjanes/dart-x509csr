@@ -8,13 +8,6 @@ and outputting associated PEMs.
 A simple usage example:
 
 ```dart
-/*
- *  example/x509csr.dart
- *
- *  David Janes
- *  Consensas
- *  2019-03-15
- */
 import 'package:x509csr/x509csr.dart';
 
 import "package:pointycastle/export.dart";
