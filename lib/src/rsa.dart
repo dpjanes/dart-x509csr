@@ -32,7 +32,7 @@ import "./crypto.dart";
 /*
  */
 String generateRSACSR({Map dn}) {
-  ASN1Object DN = makeDN({
+  ASN1Object DN = encodeDN({
     "CN": "www.davidjanes.com",
     "O": "Consensas",
     "L": "Toronto",
@@ -53,7 +53,7 @@ main(List<String> arguments) {
   AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
   ASN1ObjectIdentifier.registerFrequentNames();
 
-  ASN1Object DN = makeDN({
+  ASN1Object DN = encodeDN({
     "CN": "www.davidjanes.com",
     "O": "Consensas",
     "L": "Toronto",
@@ -64,7 +64,7 @@ main(List<String> arguments) {
   ASN1Sequence blockDN = ASN1Sequence();
   blockDN.add(ASN1Integer(BigInt.from(0)));
   blockDN.add(DN);
-  blockDN.add(makeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
+  blockDN.add(encodeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
   blockDN.add(ASN1Object.fromBytes(Uint8List.fromList([ 0xA0, 0x00 ]))); // let's call this WTF
 
   ASN1Sequence blockProtocol = ASN1Sequence();

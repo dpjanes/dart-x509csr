@@ -32,7 +32,7 @@ import 'dart:typed_data';
     "C": "CA",
   }
  */
-ASN1Object makeDN(Map<String, String> d) {
+ASN1Object encodeDN(Map<String, String> d) {
   var DN = ASN1Sequence();
 
   d.forEach((name, value) {
@@ -81,7 +81,7 @@ ASN1Object makeDN(Map<String, String> d) {
 
 /*
  */
-ASN1Object makeDNSignature(Uint8List signedDN) {
+ASN1Object encodeDNSignature(Uint8List signedDN) {
   var outer = ASN1Sequence();
 
   var inner = ASN1Sequence();
