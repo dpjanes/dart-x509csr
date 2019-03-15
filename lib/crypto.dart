@@ -109,7 +109,7 @@ encodeRSAPublicKeyToPem(RSAPublicKey publicKey) {
   var dataBase64 = base64.encode(topLevelSeq.encodedBytes);
   List<String> chunks = _chunked(dataBase64);
 
-  return """-----BEGIN PUBLIC KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PUBLIC KEY-----""";
+  return """-----BEGIN PUBLIC KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PUBLIC KEY-----\r\n""";
 }
 
 encodeRSAPrivateKeyToPem(RSAPrivateKey privateKey) {
@@ -155,5 +155,5 @@ encodeRSAPrivateKeyToPem(RSAPrivateKey privateKey) {
 
   List<String> chunks = _chunked(dataBase64);
 
-  return """-----BEGIN PRIVATE KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PRIVATE KEY-----""";
+  return """-----BEGIN PRIVATE KEY-----\r\n${chunks.join("\r\n")}\r\n-----END PRIVATE KEY-----\r\n""";
 }
