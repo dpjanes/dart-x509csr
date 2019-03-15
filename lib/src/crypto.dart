@@ -48,30 +48,23 @@ Uint8List rsaSign(Uint8List inBytes, RSAPrivateKey privateKey) {
 /*
 https://github.com/dart-lang/sdk/issues/32803#issuecomment-387405784
  */
-Uint8List rsaPublicKeyToBytes(RSAPublicKey publicKey) {
-  BigInt n = publicKey.n;
-
-/*
-  print("E ${publicKey.exponent}");
-  print("");
-  print("E ${publicKey.modulus}");
-  print("");
-  print("E ${publicKey.n}");
-  print("");
-  */
-
+Uint8List bigIntnToBytes(BigInt n) {
   int bytes = (n.bitLength + 7) >> 3;
 
   var b256 = new BigInt.from(256);
   var result = new Uint8List(bytes);
 
-  for (int i = 0; i < n.bitLength; i++) {
+  for (int i = 0; i < bytes; i++) {
     result[i] = n.remainder(b256).toInt();
     n = n >> 8;
   }
 
   return result;
 }
+
+Uint8List rsaPublicKeyModulusToBytes(RSAPublicKey publicKey) => bigIntnToBytes(publicKey.modulus);
+Uint8List rsaPublicKeyExponentToBytes(RSAPublicKey publicKey) => bigIntnToBytes(publicKey.exponent);
+Uint8List rsaPrivateKeyToBytes(RSAPrivateKey privateKey) => bigIntnToBytes(privateKey.modulus);
 
 /*
  */
