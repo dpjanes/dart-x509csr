@@ -73,6 +73,7 @@ ASN1Object _encodeDN(Map<String, String> d) {
 
   return DN;
 }
+
 /*
  */
 ASN1Sequence _makePublicKeyBlock(RSAPublicKey publicKey) {
@@ -91,7 +92,6 @@ ASN1Sequence _makePublicKeyBlock(RSAPublicKey publicKey) {
   outer.add(blockPublicKey);
 
   return outer;
-
 }
 
 /*
@@ -100,13 +100,11 @@ ASN1Object makeRSACSR(
     Map dn, RSAPrivateKey privateKey, RSAPublicKey publicKey) {
   ASN1Object encodedDN = _encodeDN(dn);
 
-
   ASN1Sequence blockDN = ASN1Sequence();
   blockDN.add(ASN1Integer(BigInt.from(0)));
   blockDN.add(encodedDN);
   blockDN.add(_makePublicKeyBlock(publicKey));
-  blockDN.add(ASN1Object.fromBytes(
-      Uint8List.fromList([0xA0, 0x00]))); // let's call this WTF
+  blockDN.add(ASN1Null(tag: 0xA0)); // let's call this WTF
 
   ASN1Sequence blockProtocol = ASN1Sequence();
   blockProtocol.add(ASN1ObjectIdentifier.fromName("md5WithRSAEncryption"));
@@ -123,7 +121,7 @@ main(List<String> arguments) {
   AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
 
   ASN1ObjectIdentifier.registerFrequentNames();
-  Map<String,String> dn = {
+  Map<String, String> dn = {
     "CN": "www.davidjanes.com",
     "O": "Consensas",
     "L": "Toronto",
