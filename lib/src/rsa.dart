@@ -20,7 +20,6 @@
  */
 
 import 'dart:convert';
-import 'dart:math';
 import 'dart:typed_data';
 
 import "package:pointycastle/export.dart";
@@ -30,7 +29,6 @@ import "./dn.dart";
 import "./crypto.dart";
 
 /*
- */
 String generateRSACSR({Map dn}) {
   ASN1Object DN = encodeDN({
     "CN": "www.davidjanes.com",
@@ -46,43 +44,54 @@ String generateRSACSR({Map dn}) {
   // inner.add(ASN1Null());
 
   return base64.encode(inner.encodedBytes);
-}
-
-main(List<String> arguments) {
-
-  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
-  ASN1ObjectIdentifier.registerFrequentNames();
-
-  ASN1Object DN = encodeDN({
-    "CN": "www.davidjanes.com",
-    "O": "Consensas",
-    "L": "Toronto",
-    "ST": "Ontario",
-    "C": "CA",
-  });
-
-  ASN1Sequence blockDN = ASN1Sequence();
-  blockDN.add(ASN1Integer(BigInt.from(0)));
-  blockDN.add(DN);
-  blockDN.add(encodeDNSignature(rsaSign(DN.encodedBytes, keyPair.privateKey)));
-  blockDN.add(ASN1Object.fromBytes(Uint8List.fromList([ 0xA0, 0x00 ]))); // let's call this WTF
-
-  ASN1Sequence blockProtocol = ASN1Sequence();
-  blockProtocol.add(ASN1ObjectIdentifier.fromName("md5WithRSAEncryption"));
-
+  /*
   RSAPublicKey publicKey = keyPair.publicKey;
   var publicKeySeq = new ASN1Sequence();
   publicKeySeq.add(ASN1Integer(publicKey.modulus));
   publicKeySeq.add(ASN1Integer(publicKey.exponent));
   var publicKeySeqBitString =
       new ASN1BitString(Uint8List.fromList(publicKeySeq.encodedBytes));
+      */
+
+}
+ */
+
+/*
+ */
+ASN1Object makeRSACSR(
+    Map dn, RSAPrivateKey privateKey, RSAPublicKey publicKey) {
+  ASN1Object encodedDN = encodeDN(dn);
+
+  ASN1Sequence blockDN = ASN1Sequence();
+  blockDN.add(ASN1Integer(BigInt.from(0)));
+  blockDN.add(encodedDN);
+  blockDN.add(encodeDNSignature(rsaSign(encodedDN.encodedBytes, privateKey)));
+  blockDN.add(ASN1Object.fromBytes(
+      Uint8List.fromList([0xA0, 0x00]))); // let's call this WTF
+
+  ASN1Sequence blockProtocol = ASN1Sequence();
+  blockProtocol.add(ASN1ObjectIdentifier.fromName("md5WithRSAEncryption"));
 
   ASN1Sequence outer = ASN1Sequence();
   outer.add(blockDN);
   outer.add(blockProtocol);
   outer.add(ASN1BitString(rsaPublicKeyToBytes(publicKey)));
 
-  print(base64.encode(outer.encodedBytes));
+  return outer;
+}
 
-  // print(signedDN.bytes);
+main(List<String> arguments) {
+  AsymmetricKeyPair keyPair = rsaGenerateKeyPair();
+  ASN1ObjectIdentifier.registerFrequentNames();
+  Map<String,String> dn = {
+    "CN": "www.davidjanes.com",
+    "O": "Consensas",
+    "L": "Toronto",
+    "ST": "Ontario",
+    "C": "CA",
+  };
+
+  ASN1Object encodedCSR = makeRSACSR(dn, keyPair.privateKey, keyPair.publicKey);
+
+  print(base64.encode(encodedCSR.encodedBytes));
 }
