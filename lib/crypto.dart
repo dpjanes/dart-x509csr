@@ -1,9 +1,9 @@
 /*
- *  providers/crypto.dart
+ *  lib/crypto.dart
  *
  *  David Janes
  *  Consensas
- *  2019-02-24
+ *  2019-03-15
  */
 
 import "package:pointycastle/export.dart";

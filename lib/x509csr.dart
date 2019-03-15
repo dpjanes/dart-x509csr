@@ -1,5 +1,5 @@
 /*
- * lib/src/x509csr.dart
+ * lib/x509csr.dart
  *
  * David Janes
  * 2018-03-15

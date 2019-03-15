@@ -1,5 +1,5 @@
 /*
- * lib/src/rsa.dart
+ * lib/rsa.dart
  *
  * David Janes
  * 2018-03-13

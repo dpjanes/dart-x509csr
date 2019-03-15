@@ -13,7 +13,7 @@ A simple usage example:
  *
  *  David Janes
  *  Consensas
- *  2019-02-24
+ *  2019-03-15
  */
 import 'package:x509csr/x509csr.dart';
 
