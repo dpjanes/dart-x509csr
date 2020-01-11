@@ -9,9 +9,8 @@ environment:
 
 dependencies:
   ## asn1lib: ^0.5.5
-  asn1lib: 
-    path: /Users/david/consensas/asn1lib
-  pointycastle: 1.0.1
+  asn1lib: ^0.5.15
+  pointycastle: 1.0.2
 
 dev_dependencies:
   pedantic: ^1.0.0

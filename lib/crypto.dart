@@ -36,7 +36,7 @@ AsymmetricKeyPair rsaGenerateKeyPair({int chunkSize = 2048}) {
 /*
  */
 Uint8List rsaSign(Uint8List inBytes, RSAPrivateKey privateKey) {
-  Signer signer = new Signer("SHA-1/RSA");
+  Signer signer = new Signer("SHA-256/RSA");
   signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
 
   RSASignature signature = signer.generateSignature(inBytes);
