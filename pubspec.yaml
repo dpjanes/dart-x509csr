@@ -5,10 +5,9 @@ homepage: https://www.davidjanes.com
 author: David Janes <davidjanes@davidjanes.com
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  ## asn1lib: ^0.5.5
   asn1lib: ^0.5.15
   pointycastle: 1.0.2
 
