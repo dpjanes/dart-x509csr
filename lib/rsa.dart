@@ -104,12 +104,12 @@ ASN1Object makeRSACSR(
   blockDN.add(ASN1Null(tag: 0xA0)); // let's call this WTF
 
   ASN1Sequence blockProtocol = ASN1Sequence();
-  blockProtocol.add(ASN1ObjectIdentifier.fromName("md5WithRSAEncryption"));
+  blockProtocol.add(ASN1ObjectIdentifier.fromName("sha256WithRSAEncryption"));
   blockProtocol.add(ASN1Null());
 
   ASN1Sequence outer = ASN1Sequence();
   outer.add(blockDN);
   outer.add(blockProtocol);
-  outer.add(ASN1BitString(rsaPrivateKeyToBytes(privateKey)));
+  outer.add(ASN1BitString(rsaSign(blockDN.contentBytes(), privateKey)));
   return outer;
 }
