@@ -110,6 +110,6 @@ ASN1Object makeRSACSR(
   ASN1Sequence outer = ASN1Sequence();
   outer.add(blockDN);
   outer.add(blockProtocol);
-  outer.add(ASN1BitString(rsaPrivateKeyToBytes(privateKey)));
+  outer.add(ASN1BitString(rsaSign(blockDN.contentBytes(), privateKey)));
   return outer;
 }
